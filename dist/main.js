@@ -1,4 +1,4 @@
 
 module.exports.loop = () => {
-    console.log(Game.time);
+    console.log(`The time is: ${Game.time}`);
 }
