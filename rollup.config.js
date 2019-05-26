@@ -10,7 +10,7 @@ let cfg;
 const dest = process.env.DEST;
 if (!dest) {
     console.log("No destination specified - code will be compiled but not uploaded");
-} else if ((cfg = require("./scconfig.json")[dest]) == null) {
+} else if ((cfg = require("./screeps_config.json")[dest]) == null) {
     throw new Error("Invalid upload destination");
 }
 

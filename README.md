@@ -4,7 +4,7 @@
 
 Run
 ```
-mv sample.scconfig.json scconfig.json
+mv sample.scconfig.json screeps_config.json
 ```
 and fill out the config as required.
 
