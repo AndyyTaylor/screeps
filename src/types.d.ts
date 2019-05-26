@@ -5,6 +5,7 @@ interface Memory {
 
 interface CreepMemory {
     mining: boolean;
+    assigned: string;
 }
 
 declare namespace NodeJS {

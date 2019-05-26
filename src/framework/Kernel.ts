@@ -3,11 +3,13 @@ import _ from 'lodash';
 import { Process } from './Process';
 import { Empire } from '../processes/Empire';
 import { City } from '../processes/City';
+import { Harvest } from '../processes/city/Harvest';
 
 // Need a better way to handle this
 const processClasses: any = {
     'empire': Empire,
-    'city': City
+    'city': City,
+    'harvest': Harvest
 };
 
 /*
@@ -61,14 +63,9 @@ export class Kernel {
     // Should save everything in memory incase runtime memory resets
     // Should also clear uneccessary memory
     public exit() {
-        for (let i = 0; i < this.finished.length; i++) {
-            const pid = this.finished[i];
-
-            delete this.procData[pid];
-            delete this.processes[pid];
-        }
-
-        this.finished = [];
+        this.clearFinishedProcesses();
+        this.clearDeadCreepMemory();
+        this.clearCreepAssignments();
     }
 
     public launchProcess(type: string, data?: any) {
@@ -96,6 +93,45 @@ export class Kernel {
         }
 
         return data;
+    }
+
+    private clearFinishedProcesses() {
+        for (let i = 0; i < this.finished.length; i++) {
+            const pid = this.finished[i];
+
+            this.deleteProcess(pid);
+        }
+
+        this.finished = [];
+    }
+
+    private deleteProcess(pid: string) {
+        delete this.procData[pid];
+        delete this.processes[pid];
+
+        const pids = Object.keys(this.procData);
+        pids.forEach((pid2) => {
+            if (this.procData[pid2].parentPID == pid) {
+                this.deleteProcess(pid2);
+            }
+        });
+    }
+
+    private clearDeadCreepMemory() {
+        for (const name in Memory.creeps) {
+            if (!(name in Game.creeps)) {
+                delete Memory.creeps[name];
+            }
+        }
+    }
+
+    private clearCreepAssignments() {
+        for (const name in Memory.creeps) {
+            if (Memory.creeps[name].assigned
+                && !(Memory.creeps[name].assigned in this.procData)) {
+                    delete Memory.creeps[name].assigned;
+            }
+        }
     }
 
     private genPID(): string {

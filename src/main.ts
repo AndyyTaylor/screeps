@@ -5,11 +5,6 @@ import { Kernel } from './framework/Kernel';
 
 function basicLive() {
     const room = Game.rooms['W37N8'];
-    for (const name in Memory.creeps) {
-        if (!(name in Game.creeps)) {
-            delete Memory.creeps[name];
-        }
-    }
 
     const spawns = room.find(FIND_MY_SPAWNS);
     for (let i = 0; i < spawns.length; i++) {
@@ -21,6 +16,10 @@ function basicLive() {
 
     for (const name in Game.creeps) {
         const creep = Game.creeps[name];
+
+        if (creep.memory.assigned) {
+            continue;
+        }
 
         creep.say('Basic Live');
 

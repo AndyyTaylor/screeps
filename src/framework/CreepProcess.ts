@@ -11,28 +11,38 @@ export class CreepProcess extends Process {
         }
     }
 
-    public init() {
-        this.hasInit = true;
-
-        this._init();
+    protected _run() {
+        this.removeOldCreeps();
+        if (this.needsCreeps()) {
+            this.assignCreeps();
+        }
     }
 
-    public run() {
-        if (!this.hasInit) {
-            this.init();
+    private removeOldCreeps(): void {
+        const toRemove: string[] = [];
+        for (let i = 0; i < this.data.creepNames.length; i++) {
+            const name = this.data.creepNames[i];
+            if (!(name in Game.creeps)) {
+                toRemove.push(name);
+            }
         }
 
-        this._run();
+        for (let i = 0; i < toRemove.length; i++) {
+            const index = this.data.creepNames.indexOf(toRemove[i]);
+            if (index != -1) {
+                this.data.creepNames.splice(index, 1);
+            } else {
+                throw new Error(`Bad index in CreepProcess._run()`);
+            }
+        }
     }
 
-    protected launchChildProcess(type: string, data?: any) {
-        global.kernel.launchProcess(type, Object.assign({ parentPID: this.pid }, data));
+    protected assignCreep(name: string): void {
+        this.data.creepNames.push(name);
+        Game.creeps[name].memory.assigned = this.pid;
     }
 
     protected _init() {};
-    protected _run() {};
     protected needsCreeps(): boolean { return false; };
     protected assignCreeps() {};
-
-    
 }

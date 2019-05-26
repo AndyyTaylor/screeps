@@ -16,7 +16,7 @@ export class Empire extends Process {
     _run() {
         const cityData = global.kernel.getProcessDataByType('city');
         const assigned = _.map(cityData, (data: any) => {
-            return data.homeRoom;
+            return data.homeName;
         });
 
         for (const roomName in Game.rooms) {
@@ -24,7 +24,7 @@ export class Empire extends Process {
             if (room.controller && room.controller.owner && room.controller.owner.username == 'Lisp'
                 && !assigned.includes(roomName)) {
                     console.log(`Launching city for ${roomName}`);
-                    this.launchChildProcess('city', { homeRoom: roomName });
+                    this.launchChildProcess('city', { homeName: roomName });
             }
         }
     }
