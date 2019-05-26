@@ -21,10 +21,12 @@ export class Kernel {
     // when that happens
     processes: { [id: string]: Process; };
     procData: { [id: string]: any };
+    finished: string[];
 
     constructor() {
         this.processes = {};
         this.procData = {};
+        this.finished = [];
 
         Kernel.validateMemory();
     }
@@ -39,18 +41,34 @@ export class Kernel {
 
     // Should execute the process in order of priority
     public run() {
-        for (let pid in this.procData) {
+        for (const pid in this.procData) {
             console.log(`Running process ${pid}`);
             const process: Process = this.getProcess(pid);
 
-            process.run();
+            try {
+                process.run();
+
+                if (process.isComplete()) {
+                    this.finished.push(pid);
+                    console.log(`${pid} is finished.`);
+                }
+            } catch (ex) {
+                console.log(`${pid} failed: ${ex}`);
+            }
         }
     }
 
     // Should save everything in memory incase runtime memory resets
     // Should also clear uneccessary memory
     public exit() {
+        for (let i = 0; i < this.finished.length; i++) {
+            const pid = this.finished[i];
 
+            delete this.procData[pid];
+            delete this.processes[pid];
+        }
+
+        this.finished = [];
     }
 
     public launchProcess(type: string, data?: any) {

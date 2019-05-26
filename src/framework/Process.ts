@@ -6,13 +6,13 @@ export class Process {
         this.hasInit = false;
     }
 
-    public init() {
+    public init(): void {
         this.hasInit = true;
 
         this._init();
     }
 
-    public run() {
+    public run(): void {
         if (!this.hasInit) {
             this.init();
         }
@@ -20,10 +20,11 @@ export class Process {
         this._run();
     }
 
-    protected launchChildProcess(type: string, data?: any) {
+    protected launchChildProcess(type: string, data?: any): void {
         global.kernel.launchProcess(type, Object.assign({ parentPID: this.pid }, data));
     }
 
-    protected _init() {};
-    protected _run() {};
+    public isComplete(): boolean { return false; }
+    protected _init(): void {};
+    protected _run(): void {};
 }

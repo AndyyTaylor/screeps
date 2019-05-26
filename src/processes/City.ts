@@ -18,6 +18,10 @@ export class City extends Process {
     }
 
     _run() {
-        
+
+    }
+
+    isComplete() {
+        return true;
     }
 }
