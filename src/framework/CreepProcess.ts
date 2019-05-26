@@ -1,9 +1,14 @@
 
-export class Process {
-    hasInit: boolean;
+import { Process } from "./Process";
 
-    constructor(protected readonly pid: string, protected data?: any) {
-        this.hasInit = false;
+export class CreepProcess extends Process {
+
+    constructor(pid: string, data?: any) {
+        super(pid, data);
+
+        if (_.isUndefined(this.data.creepNames)) {
+            this.data.creepNames = [];
+        }
     }
 
     public init() {
@@ -26,4 +31,8 @@ export class Process {
 
     protected _init() {};
     protected _run() {};
+    protected needsCreeps(): boolean { return false; };
+    protected assignCreeps() {};
+
+    
 }

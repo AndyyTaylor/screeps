@@ -2,9 +2,12 @@
 import _ from 'lodash';
 import { Process } from './Process';
 import { Empire } from '../processes/Empire';
+import { City } from '../processes/City';
 
+// Need a better way to handle this
 const processClasses: any = {
-    'empire': Empire
+    'empire': Empire,
+    'city': City
 };
 
 /*
@@ -16,9 +19,9 @@ export class Kernel {
     // Validate memory & create defaults if necessary
     // actual loading done in start() so we have more control over
     // when that happens
-
     processes: { [id: string]: Process; };
     procData: { [id: string]: any };
+
     constructor() {
         this.processes = {};
         this.procData = {};
@@ -30,7 +33,7 @@ export class Kernel {
     // General pre-run init stuff idk
     public start() {
         if (!this.hasProcessOfType('empire')) {
-            this.createProcess('empire');
+            this.launchProcess('empire');
         }
     }
 
@@ -50,7 +53,7 @@ export class Kernel {
 
     }
 
-    public createProcess(type: string, data?: any) {
+    public launchProcess(type: string, data?: any) {
         console.log(`Creating process of type ${type}`);
         this.procData[this.genPID()] = Object.assign({ type: type }, data || {});
     }
@@ -63,6 +66,18 @@ export class Kernel {
         } else {
             throw new Error(`Process ${id} not found`);
         }
+    }
+
+    public getProcessDataByType(type: string) {
+        const data = [];
+        for (const pid in this.procData) {
+            const procData = this.procData[pid];
+            if (procData.type == type) {
+                data.push(procData);
+            }
+        }
+
+        return data;
     }
 
     private genPID(): string {

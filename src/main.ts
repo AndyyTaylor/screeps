@@ -53,6 +53,7 @@ function basicLive() {
 
 
 const kernel: Kernel = new Kernel();
+global.kernel = kernel;
 
 export const loop = ErrorMapper.wrapLoop(() => {
     console.log(`Current game tick is ${Game.time}`);
