@@ -44,7 +44,7 @@ export class Kernel {
     // Should execute the process in order of priority
     public run() {
         for (const pid in this.procData) {
-            console.log(`Running process ${pid}`);
+            // console.log(`Running process ${pid}`);
             const process: Process = this.getProcess(pid);
 
             try {
@@ -52,7 +52,7 @@ export class Kernel {
 
                 if (process.isComplete()) {
                     this.finished.push(pid);
-                    console.log(`${pid} is finished.`);
+                    // console.log(`${pid} is finished.`);
                 }
             } catch (ex) {
                 console.log(`${pid} failed: ${ex}`);
@@ -69,7 +69,7 @@ export class Kernel {
     }
 
     public launchProcess(type: string, data?: any) {
-        console.log(`Creating process of type ${type}`);
+        // console.log(`Creating process of type ${type}`);
         this.procData[this.genPID()] = Object.assign({ type: type }, data || {});
     }
 

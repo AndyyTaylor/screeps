@@ -18,7 +18,6 @@ export class City extends Process {
     }
 
     _run() {
-        console.log(JSON.stringify(this.data));
         const sourceIds = this.homeRoom.find(FIND_SOURCES_ACTIVE).map((source) => {
             return source.id;
         });
@@ -27,7 +26,6 @@ export class City extends Process {
             const sId = sourceIds[i];
             let hasProcess = false;
             for (let j = 0; j < harvestProcs.length; j++) {
-                console.log(JSON.stringify(harvestProcs[j]));
                 if (harvestProcs[j].parentPID == this.pid && harvestProcs[j].sourceId == sId) {
                     hasProcess = true;
                     break;
