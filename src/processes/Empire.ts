@@ -21,7 +21,7 @@ export class Empire extends Process {
 
         for (const roomName in Game.rooms) {
             const room = Game.rooms[roomName];
-            if (room.controller && room.controller.owner && room.controller.owner.username == 'Lisp'
+            if (room.controller && room.controller.owner && room.controller.owner.username == 'tallman'
                 && !assigned.includes(roomName)) {
                     console.log(`Launching city for ${roomName}`);
                     this.launchChildProcess('city', { homeName: roomName });

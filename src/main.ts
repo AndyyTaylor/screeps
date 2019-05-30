@@ -4,13 +4,13 @@ import { Kernel } from './framework/Kernel';
 
 
 function basicLive() {
-    const room = Game.rooms['W37N8'];
+    const room = Game.rooms['W35N8'];
 
     const spawns = room.find(FIND_MY_SPAWNS);
     for (let i = 0; i < spawns.length; i++) {
         const spawn = spawns[i];
         if (spawn.energy >= 300) {
-            spawn.spawnCreep([MOVE, WORK, CARRY, CARRY], Math.floor(Math.random() * 1000).toString());
+            spawn.spawnCreep([MOVE, WORK, CARRY, CARRY], 'Bob' + Math.floor(Math.random() * 1000).toString());
         }
     }
 
