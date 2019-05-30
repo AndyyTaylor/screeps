@@ -11,6 +11,8 @@ export class Empire extends Process {
 
     _init() {
         console.log("empire is initializing");
+
+        return true;
     }
 
     _run() {

@@ -1,4 +1,4 @@
-{
+export const base = {
     "name": "Bunker 1",
     "width": 10,
     "height": 10,
@@ -733,4 +733,4 @@
             ]
         }
     }
-}
+};

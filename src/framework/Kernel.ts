@@ -46,7 +46,7 @@ export class Kernel {
     // Should execute the process in order of priority
     public run() {
         for (const pid in this.procData) {
-            console.log(`Running process ${pid}`);
+            // console.log(`Running process ${pid}`);
             const process: Process = this.getProcess(pid);
 
             try {
@@ -143,7 +143,7 @@ export class Kernel {
         return pid.toString();
     }
 
-    private hasProcessOfType(type: string) {
+    public hasProcessOfType(type: string) {
         for (let pid in this.procData) {
             if (this.procData[pid].type == type) {
                 return true;

@@ -1,6 +1,6 @@
 
 import { Process } from '../../framework/Process';
-
+import { base } from '../../base';
 
 export class RoomPlanner extends Process {
     homeName: string;
@@ -25,12 +25,13 @@ export class RoomPlanner extends Process {
         }
 
 
-        return true;
+        return false;
     }
 
     initCityLayout() {
         console.log(`initing a city layout for ${this.homeName}`);
-        
+
+        console.log(`Width: ${base.width}, Height: ${base.height}`);
     }
 
     initRemoteLayout() {
@@ -38,25 +39,7 @@ export class RoomPlanner extends Process {
     }
 
     _run() {
-        console.log(JSON.stringify(this.data));
-        const sourceIds = this.homeRoom.find(FIND_SOURCES_ACTIVE).map((source) => {
-            return source.id;
-        });
-        const harvestProcs = global.kernel.getProcessDataByType('harvest');
-        for (let i = 0; i < sourceIds.length; i++) {
-            const sId = sourceIds[i];
-            let hasProcess = false;
-            for (let j = 0; j < harvestProcs.length; j++) {
-                console.log(JSON.stringify(harvestProcs[j]));
-                if (harvestProcs[j].parentPID == this.pid && harvestProcs[j].sourceId == sId) {
-                    hasProcess = true;
-                    break;
-                }
-            }
+        // console.log('RoomPlanner: ' + JSON.stringify(this.data));
 
-            if (!hasProcess) {
-                this.launchChildProcess('harvest', { sourceId: sId });
-            }
-        }
     }
 }
