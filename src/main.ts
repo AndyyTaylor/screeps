@@ -1,10 +1,11 @@
 
 import { ErrorMapper } from "./utils/ErrorMapper";
 import { Kernel } from './framework/Kernel';
-
+import { config } from './config';
 
 function basicLive() {
-    const room = Game.rooms['W37N8'];
+    // HACK: This will break with visibility in more than 1 room
+    const room = Game.rooms[Object.keys(Game.rooms)[0]];
 
     const spawns = room.find(FIND_MY_SPAWNS);
     for (let i = 0; i < spawns.length; i++) {
@@ -53,6 +54,7 @@ function basicLive() {
 
 const kernel: Kernel = new Kernel();
 global.kernel = kernel;
+global.USERNAME = config.username;
 
 export const loop = ErrorMapper.wrapLoop(() => {
     console.log(`Current game tick is ${Game.time}`);
