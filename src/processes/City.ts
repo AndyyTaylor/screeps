@@ -14,11 +14,31 @@ export class City extends Process {
     }
 
     _init() {
-
+        return true;
     }
 
     _run() {
-        console.log(JSON.stringify(this.data));
+        // console.log(JSON.stringify(this.data));
+        this.launchOneOfProcesses();
+        this.launchHarvestProcesses();
+    }
+
+    launchOneOfProcesses() {
+        const oneOf = ['roomplanner', 'build'];
+
+        for (let i = 0; i < oneOf.length; i++) {
+            const processType = oneOf[i];
+
+            // HACK: this will break with multiple cities
+            const hasProcess = global.kernel.hasProcessOfType(processType);
+
+            if (!hasProcess) {
+                this.launchChildProcess(processType, { homeName: this.homeName });
+            }
+        }
+    }
+
+    launchHarvestProcesses() {
         const sourceIds = this.homeRoom.find(FIND_SOURCES_ACTIVE).map((source) => {
             return source.id;
         });
@@ -27,7 +47,7 @@ export class City extends Process {
             const sId = sourceIds[i];
             let hasProcess = false;
             for (let j = 0; j < harvestProcs.length; j++) {
-                console.log(JSON.stringify(harvestProcs[j]));
+                // console.log(JSON.stringify(harvestProcs[j]));
                 if (harvestProcs[j].parentPID == this.pid && harvestProcs[j].sourceId == sId) {
                     hasProcess = true;
                     break;

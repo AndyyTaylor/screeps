@@ -57,7 +57,7 @@ global.kernel = kernel;
 global.USERNAME = config.username;
 
 export const loop = ErrorMapper.wrapLoop(() => {
-    console.log(`Current game tick is ${Game.time}`);
+    // console.log(`Current game tick is ${Game.time}`);
 
     kernel.start();
     kernel.run();

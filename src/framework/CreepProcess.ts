@@ -42,7 +42,7 @@ export class CreepProcess extends Process {
         Game.creeps[name].memory.assigned = this.pid;
     }
 
-    protected _init() {};
+    protected _init() { return true; };
     protected needsCreeps(): boolean { return false; };
     protected assignCreeps() {};
 }

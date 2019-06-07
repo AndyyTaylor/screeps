@@ -7,9 +7,7 @@ export class Process {
     }
 
     public init(): void {
-        this.hasInit = true;
-
-        this._init();
+        this.hasInit = this._init();
     }
 
     public run(): void {
@@ -25,6 +23,6 @@ export class Process {
     }
 
     public isComplete(): boolean { return false; }
-    protected _init(): void {};
+    protected _init(): boolean { return true; };
     protected _run(): void {};
 }

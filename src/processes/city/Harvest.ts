@@ -14,7 +14,7 @@ export class Harvest extends CreepProcess {
     }
 
     _init() {
-
+        return true;
     }
 
     _run() {
