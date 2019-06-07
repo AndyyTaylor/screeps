@@ -10,6 +10,8 @@ function basicLive() {
     for (let i = 0; i < spawns.length; i++) {
         const spawn = spawns[i];
         if (spawn.energy >= 300) {
+
+          if (this.data.creepNames)
             spawn.spawnCreep([MOVE, WORK, CARRY, CARRY], 'Bob' + Math.floor(Math.random() * 1000).toString());
         }
     }

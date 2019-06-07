@@ -2,10 +2,11 @@
 import { CreepProcess } from '../../framework/CreepProcess';
 
 
-export class Harvest extends CreepProcess {
+export class Upgrade extends CreepProcess {
     homeName: string;
     homeRoom: Room;
     source: Source | null;
+    resource: Resource | null;
 
     constructor(pid: string, data: any) {
         super(pid, data);
@@ -13,6 +14,7 @@ export class Harvest extends CreepProcess {
         this.homeName = data.homeName;
         this.homeRoom = Game.rooms[this.homeName];
         this.source = Game.getObjectById(this.data.sourceId);
+        this.resource = Game.getObjectById(this.data.resourceId);
 
     }
     //will run once for complex tasks that we can store in memory
@@ -28,17 +30,17 @@ export class Harvest extends CreepProcess {
             //Initialize Creep/Get Creep Object
             const name = this.data.creepNames[i];
             const creep = Game.creeps[name];
-            creep.say('I do 4 Bob');
+            creep.say('Power Time');
 
             //If there is no source say no source and continue with program
-            if (!this.source){
-              creep.say('No source');
+            if (!this.resource){
+              creep.say('No Resource');
               continue;
             }
 
             // If there is a source, move to source and mine it
-            creep.moveTo(this.source);
-            creep.harvest(this.source);
+            creep.moveTo(this.resource);
+            creep.harvest(this.resource);
 
         }
     }
