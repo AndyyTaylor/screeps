@@ -1,7 +1,7 @@
 export const base = {
     "name": "Bunker 1",
-    "width": 10,
-    "height": 10,
+    "width": 11,
+    "height": 11,
     "manager": {
         "x": 6,
         "y": 6
@@ -11,6 +11,7 @@ export const base = {
         "y": 5
     },
     "feedpaths": [],
+    "buildPriority": [ STRUCTURE_TOWER, STRUCTURE_EXTENSION, STRUCTURE_STORAGE, STRUCTURE_TERMINAL ],
     "buildings": {
         "road": {
             "pos": [

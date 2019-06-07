@@ -201,6 +201,40 @@ export class RoomPlanner extends Process {
 
     _run() {
         // console.log('RoomPlanner: ' + JSON.stringify(this.data));
+        const basePos = { x: this.homeRoom.memory.basePos.x, y: this.homeRoom.memory.basePos.y };
 
+        basePos.x -= base.width;
+        basePos.y -= base.height;
+
+        for (let i = 0; i < base.buildPriority.length; i++) {
+            const buildType = base.buildPriority[i];
+
+            let hasBuilt = false;
+            for (let j = 0; j < base.buildings[buildType].pos.length; j++) {
+                const relativePos = base.buildings[buildType].pos;
+                const buildPos = {
+                    x: basePos.x + base.buildings[buildType].pos[j].x,
+                    y: basePos.y + base.buildings[buildType].pos[j].y
+                };
+
+                let exists = false;
+                const structs = this.homeRoom.lookForAt(LOOK_STRUCTURES, buildPos.x, buildPos.y);
+                structs.forEach((struct) => {
+                    if (struct.structureType == buildType) {
+                        exists = true;
+                    }
+                });
+
+                if (!exists) {
+                    this.homeRoom.createConstructionSite(buildPos.x, buildPos.y, buildType);
+                    hasBuilt = true;
+                    break;
+                }
+            }
+
+            if (hasBuilt) {
+                break;
+            }
+        }
     }
 }
