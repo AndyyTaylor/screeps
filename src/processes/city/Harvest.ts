@@ -28,12 +28,14 @@ export class Harvest extends CreepProcess {
             //Initialize Creep/Get Creep Object
             const name = this.data.creepNames[i];
             const creep = Game.creeps[name];
-            creep.say('harvest');
+            creep.say('I do this for Bob');
 
             if (!this.source){
+              creep.say('No source');
               continue;
             }
             creep.moveTo(this.source);
+            creep.harvest(this.source);
             //Check if already mining
               //If not mining, move to closes source
               //Else, check if full
