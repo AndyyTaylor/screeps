@@ -29,9 +29,9 @@ export class RoomPlanner extends Process {
     }
 
     initCityLayout() {
-        console.log(`initing a city layout for ${this.homeName}`);
+        // console.log(`initing a city layout for ${this.homeName}`);
 
-        console.log(`Width: ${base.width}, Height: ${base.height}`);
+        // console.log(`Width: ${base.width}, Height: ${base.height}`);
 
         if (!this.homeRoom.memory.basePos) {
             console.log(`Calculating new position`);
@@ -137,6 +137,7 @@ export class RoomPlanner extends Process {
             polyPoints.push([this.homeRoom.memory.basePos.x - base.width, this.homeRoom.memory.basePos.y]);
             polyPoints.push([this.homeRoom.memory.basePos.x - base.width, this.homeRoom.memory.basePos.y - base.height]);
             polyPoints.push([this.homeRoom.memory.basePos.x, this.homeRoom.memory.basePos.y - base.height]);
+            polyPoints.push([this.homeRoom.memory.basePos.x, this.homeRoom.memory.basePos.y]);
 
             for (let j = 0; j < polyPoints.length; j++) {
                 polyPoints[j] = [
@@ -145,7 +146,7 @@ export class RoomPlanner extends Process {
                 ];
             }
 
-            vis.poly(polyPoints, { fill: 'green', opacity: 0.2 });
+            vis.poly(polyPoints, { fill: 'green', opacity: 0.1 });
         }
     }
 
@@ -206,6 +207,36 @@ export class RoomPlanner extends Process {
         basePos.x -= base.width;
         basePos.y -= base.height;
 
+        if (this.homeRoom.find(FIND_MY_CONSTRUCTION_SITES).length == 0) {
+            this.createConstructionSite(basePos);
+        }
+
+        this.visualiseBase(basePos);
+    }
+
+    visualiseBase(basePos: any) {
+        const vis = this.homeRoom.visual;
+
+        for (let i = 0; i < base.buildPriority.length; i++) {
+            const buildType = base.buildPriority[i];
+
+            for (let j = 0; j < base.buildings[buildType].pos.length; j++) {
+                const relativePos = base.buildings[buildType].pos;
+                const buildPos = {
+                    x: basePos.x + base.buildings[buildType].pos[j].x,
+                    y: basePos.y + base.buildings[buildType].pos[j].y
+                };
+
+                if (buildType == STRUCTURE_EXTENSION) {
+                    vis.circle(buildPos.x, buildPos.y, { 'fill': 'yellow' });
+                } else if (buildType == STRUCTURE_TOWER) {
+                    vis.rect(buildPos.x - 0.4, buildPos.y - 0.4, 0.8, 0.8, { 'fill': 'yellow' });
+                }
+            }
+        }
+    }
+
+    createConstructionSite(basePos: any) {
         for (let i = 0; i < base.buildPriority.length; i++) {
             const buildType = base.buildPriority[i];
 
