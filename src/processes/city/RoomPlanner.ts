@@ -33,50 +33,89 @@ export class RoomPlanner extends Process {
 
         console.log(`Width: ${base.width}, Height: ${base.height}`);
 
-        const roomTerrain: RoomTerrain = this.homeRoom.getTerrain();
-        const validWidth = this.getValidByWidth(base.width, roomTerrain);
-        const validHeight = this.getValidByHeight(base.height, roomTerrain);
+        if (!this.homeRoom.memory.basePos) {
+            console.log(`Calculating new position`);
+            const roomTerrain: RoomTerrain = this.homeRoom.getTerrain();
+            const validWidth = this.getValidByWidth(base.width, roomTerrain);
+            const validHeight = this.getValidByHeight(base.height, roomTerrain);
 
-
-
-        const vis = this.homeRoom.visual;
-        for (let i = 0; i < validWidth.length; i++) {
-            // vis.circle(validWidth[i].x, validWidth[i].y);
-        }
-
-        for (let i = 0; i < validHeight.length; i++) {
-            // vis.circle(validHeight[i].x, validHeight[i].y);
-        }
-
-        const valid = validWidth.filter((pos) => {
-            let vertCount = 0;
-            for (let i = 0; i < validHeight.length; i++) {
-                if (validHeight[i].y == pos.y
-                        && validHeight[i].x <= pos.x
-                        && validHeight[i].x >= pos.x - base.width) {
-                    vertCount += 1;
-                }
-            }
-
-            let horCount = 0;
+            const vis = this.homeRoom.visual;
             for (let i = 0; i < validWidth.length; i++) {
-                if (validWidth[i].x == pos.x
-                        && validWidth[i].y <= pos.y
-                        && validWidth[i].y >= pos.y - base.height) {
-                    horCount += 1;
+                // vis.circle(validWidth[i].x, validWidth[i].y);
+            }
+
+            for (let i = 0; i < validHeight.length; i++) {
+                // vis.circle(validHeight[i].x, validHeight[i].y);
+            }
+
+            const valid = validWidth.filter((pos) => {
+                let vertCount = 0;
+                for (let i = 0; i < validHeight.length; i++) {
+                    if (validHeight[i].y == pos.y
+                            && validHeight[i].x <= pos.x
+                            && validHeight[i].x >= pos.x - base.width) {
+                        vertCount += 1;
+                    }
+                }
+
+                let horCount = 0;
+                for (let i = 0; i < validWidth.length; i++) {
+                    if (validWidth[i].x == pos.x
+                            && validWidth[i].y <= pos.y
+                            && validWidth[i].y >= pos.y - base.height) {
+                        horCount += 1;
+                    }
+                }
+
+                return vertCount >= base.height && horCount >= base.width;
+            });
+
+            for (let i = 0; i < valid.length; i++) {
+                const polyPoints: any = [];
+
+                polyPoints.push([valid[i].x, valid[i].y]);
+                polyPoints.push([valid[i].x - base.width, valid[i].y]);
+                polyPoints.push([valid[i].x - base.width, valid[i].y - base.height]);
+                polyPoints.push([valid[i].x, valid[i].y - base.height]);
+
+                for (let j = 0; j < polyPoints.length; j++) {
+                    polyPoints[j] = [
+                        polyPoints[j][0] + 0.5,
+                        polyPoints[j][1] + 0.5
+                    ];
+                }
+
+                vis.poly(polyPoints, { fill: 'aqua', opacity: 0.05 });
+                // vis.circle(valid[i].x, valid[i].y);
+            }
+
+            let bestScore = 0;
+            let bestPos = null;
+            for (let i = 0; i < valid.length; i++) {
+                const pos = valid[i];
+
+                const centre = { x: valid[i].x - base.width / 2, y: valid[i].y - base.height / 2 };
+
+                if (!this.homeRoom.controller) return;
+
+                const dist = Math.sqrt((Math.pow(centre.x - this.homeRoom.controller.pos.x, 2) + Math.pow(centre.y - this.homeRoom.controller.pos.y, 2)));
+
+                const score = -dist;
+
+                if (bestPos == null || score > bestScore) {
+                    bestScore = score;
+                    bestPos = pos;
                 }
             }
 
-            return vertCount >= base.height && horCount >= base.width;
-        });
+            if (bestPos == null) return;
 
-        for (let i = 0; i < valid.length; i++) {
             const polyPoints: any = [];
 
-            polyPoints.push([valid[i].x, valid[i].y]);
-            polyPoints.push([valid[i].x - base.width, valid[i].y]);
-            polyPoints.push([valid[i].x - base.width, valid[i].y - base.height]);
-            polyPoints.push([valid[i].x, valid[i].y - base.height]);
+            polyPoints.push([bestPos.x, bestPos.y]);
+            polyPoints.push([bestPos.x - base.width, bestPos.y]);
+            polyPoints.push([bestPos.x - base.width, bestPos.y - base.height]);
+            polyPoints.push([bestPos.x, bestPos.y - base.height]);
 
             for (let j = 0; j < polyPoints.length; j++) {
                 polyPoints[j] = [
@@ -85,47 +124,29 @@ export class RoomPlanner extends Process {
                 ];
             }
 
-            vis.poly(polyPoints, { fill: 'aqua', opacity: 0.05 });
-            // vis.circle(valid[i].x, valid[i].y);
-        }
+            vis.poly(polyPoints, { fill: 'red', opacity: 0.8 });
+            vis.circle(bestPos.x, bestPos.y);
 
-        let bestScore = 0;
-        let bestPos = null;
-        for (let i = 0; i < valid.length; i++) {
-            const pos = valid[i];
+            this.homeRoom.memory.basePos = bestPos;
+        } else {
+            const vis = this.homeRoom.visual;
 
-            const centre = { x: valid[i].x - base.width / 2, y: valid[i].y - base.height / 2 };
+            const polyPoints: any = [];
 
-            if (!this.homeRoom.controller) return;
+            polyPoints.push([this.homeRoom.memory.basePos.x, this.homeRoom.memory.basePos.y]);
+            polyPoints.push([this.homeRoom.memory.basePos.x - base.width, this.homeRoom.memory.basePos.y]);
+            polyPoints.push([this.homeRoom.memory.basePos.x - base.width, this.homeRoom.memory.basePos.y - base.height]);
+            polyPoints.push([this.homeRoom.memory.basePos.x, this.homeRoom.memory.basePos.y - base.height]);
 
-            const dist = Math.sqrt((Math.pow(centre.x - this.homeRoom.controller.pos.x, 2) + Math.pow(centre.y - this.homeRoom.controller.pos.y, 2)));
-
-            const score = -dist;
-
-            if (bestPos == null || score > bestScore) {
-                bestScore = score;
-                bestPos = pos;
+            for (let j = 0; j < polyPoints.length; j++) {
+                polyPoints[j] = [
+                    polyPoints[j][0] + 0.5,
+                    polyPoints[j][1] + 0.5
+                ];
             }
+
+            vis.poly(polyPoints, { fill: 'green', opacity: 0.2 });
         }
-
-        if (bestPos == null) return;
-
-        const polyPoints: any = [];
-
-        polyPoints.push([bestPos.x, bestPos.y]);
-        polyPoints.push([bestPos.x - base.width, bestPos.y]);
-        polyPoints.push([bestPos.x - base.width, bestPos.y - base.height]);
-        polyPoints.push([bestPos.x, bestPos.y - base.height]);
-
-        for (let j = 0; j < polyPoints.length; j++) {
-            polyPoints[j] = [
-                polyPoints[j][0] + 0.5,
-                polyPoints[j][1] + 0.5
-            ];
-        }
-
-        vis.poly(polyPoints, { fill: 'red', opacity: 0.8 });
-        vis.circle(bestPos.x, bestPos.y);
     }
 
     getValidByWidth(width: number, roomTerrain: RoomTerrain) {
