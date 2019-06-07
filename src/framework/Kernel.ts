@@ -5,12 +5,14 @@ import { Empire } from '../processes/Empire';
 import { City } from '../processes/City';
 import { Harvest } from '../processes/city/Harvest';
 import { RoomPlanner } from '../processes/city/RoomPlanner';
+import { Build } from '../processes/city/Build';
 
 // Need a better way to handle this
 const processClasses: any = {
     'empire': Empire,
     'city': City,
     'harvest': Harvest,
+    'build': Build,
     'roomplanner': RoomPlanner
 };
 

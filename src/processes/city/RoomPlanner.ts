@@ -29,24 +29,12 @@ export class RoomPlanner extends Process {
     }
 
     initCityLayout() {
-        // console.log(`initing a city layout for ${this.homeName}`);
-
-        // console.log(`Width: ${base.width}, Height: ${base.height}`);
-
         if (!this.homeRoom.memory.basePos) {
             console.log(`Calculating new position`);
+
             const roomTerrain: RoomTerrain = this.homeRoom.getTerrain();
             const validWidth = this.getValidByWidth(base.width, roomTerrain);
             const validHeight = this.getValidByHeight(base.height, roomTerrain);
-
-            const vis = this.homeRoom.visual;
-            for (let i = 0; i < validWidth.length; i++) {
-                // vis.circle(validWidth[i].x, validWidth[i].y);
-            }
-
-            for (let i = 0; i < validHeight.length; i++) {
-                // vis.circle(validHeight[i].x, validHeight[i].y);
-            }
 
             const valid = validWidth.filter((pos) => {
                 let vertCount = 0;
@@ -70,6 +58,7 @@ export class RoomPlanner extends Process {
                 return vertCount >= base.height && horCount >= base.width;
             });
 
+            const vis = this.homeRoom.visual;
             for (let i = 0; i < valid.length; i++) {
                 const polyPoints: any = [];
 
@@ -77,6 +66,7 @@ export class RoomPlanner extends Process {
                 polyPoints.push([valid[i].x - base.width, valid[i].y]);
                 polyPoints.push([valid[i].x - base.width, valid[i].y - base.height]);
                 polyPoints.push([valid[i].x, valid[i].y - base.height]);
+                polyPoints.push([valid[i].x, valid[i].y]);
 
                 for (let j = 0; j < polyPoints.length; j++) {
                     polyPoints[j] = [
@@ -86,7 +76,6 @@ export class RoomPlanner extends Process {
                 }
 
                 vis.poly(polyPoints, { fill: 'aqua', opacity: 0.05 });
-                // vis.circle(valid[i].x, valid[i].y);
             }
 
             let bestScore = 0;

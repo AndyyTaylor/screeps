@@ -24,7 +24,7 @@ export class City extends Process {
     }
 
     launchOneOfProcesses() {
-        const oneOf = ['roomplanner'];
+        const oneOf = ['roomplanner', 'build'];
 
         for (let i = 0; i < oneOf.length; i++) {
             const processType = oneOf[i];
