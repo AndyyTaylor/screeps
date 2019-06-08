@@ -14,6 +14,7 @@ declare module "json!*"
 }
 
 interface CreepMemory {
+    gathering: boolean;
     mining: boolean;
     assigned: string;
 }

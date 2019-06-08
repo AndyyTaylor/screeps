@@ -7,6 +7,7 @@ import { Harvest } from '../processes/city/Harvest';
 import { RoomPlanner } from '../processes/city/RoomPlanner';
 import { Build } from '../processes/city/Build';
 import { Upgrade } from '../processes/city/Upgrade';
+import { Feed } from '../processes/city/Feed';
 
 // Need a better way to handle this
 const processClasses: any = {
@@ -15,7 +16,8 @@ const processClasses: any = {
     'harvest': Harvest,
     'build': Build,
     'roomplanner': RoomPlanner,
-    'upgrade': Upgrade
+    'upgrade': Upgrade,
+    'feed': Feed
 };
 
 /*
