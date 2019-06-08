@@ -66,7 +66,7 @@ export class Feed extends CreepProcess {
         const site = creep.pos.findClosestByRange(sites);
 
         if (site) {
-            if (!creep.pos.inRangeTo(site, 3)) {
+            if (!creep.pos.isNearTo(site)) {
                 creep.moveTo(site);
             } else {
                 creep.transfer(site, RESOURCE_ENERGY);
