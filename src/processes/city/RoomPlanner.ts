@@ -216,6 +216,10 @@ export class RoomPlanner extends Process {
                     y: basePos.y + base.buildings[buildType].pos[j].y
                 };
 
+                if (this.homeRoom.lookForAt(LOOK_STRUCTURES, buildPos.x, buildPos.y).find((struct) => { return struct.structureType == buildType })) {
+                    continue;
+                }
+
                 if (buildType == STRUCTURE_EXTENSION) {
                     vis.circle(buildPos.x, buildPos.y, { 'fill': 'yellow' });
                 } else if (buildType == STRUCTURE_TOWER) {
@@ -228,6 +232,14 @@ export class RoomPlanner extends Process {
     createConstructionSite(basePos: any) {
         for (let i = 0; i < base.buildPriority.length; i++) {
             const buildType = base.buildPriority[i];
+
+            const numBuilt = this.homeRoom.find(FIND_MY_STRUCTURES).filter((struct) => {
+                return struct.structureType == buildType;
+            }).length;
+
+            if (numBuilt >= CONTROLLER_STRUCTURES[buildType][this.homeRoom.controller.level]) {
+                continue;
+            }
 
             let hasBuilt = false;
             for (let j = 0; j < base.buildings[buildType].pos.length; j++) {
