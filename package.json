@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@types/async": "^2.4.2",
-    "async": "^3.0.1",
+    "async": "^3.2.2",
     "source-map": "~0.6.1"
   }
 }
